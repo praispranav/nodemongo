@@ -8,6 +8,18 @@ var leader = require('./routes/leader')
 var proMotion = require("./routes/promotion")
 var dishRouter = require('./routes/dishrouter.js')
 
+const mongoose = require('mongoose');
+const Dishes = require('./modal/dishes');
+
+const url = "mongodb://localhost:27017/conFusion"
+const connect = mongoose.connect(url);
+connect.then((db)=>{
+  console.log('Connected Correcly to the server');
+
+}).catch((err)=>{
+  console.log("databaseConnection ErrorwhilE ConnEcting",err)
+})
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
