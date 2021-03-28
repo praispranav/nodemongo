@@ -34,6 +34,32 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+function auth(req,res,next){
+  console.log(req.header)
+  var authHeader = req.headers.authorization;
+  if (!authHeader){
+    var err = new Error("You are not Authenticated")
+    res.setHeader('WWW-Authenticate', 'Basic');
+    err.status = 401
+    return next(err);
+
+  }
+  var auth = new Buffer(authHeader.split(' ')[1],'Base64').toString().split(':')
+  var username = auth[0];
+  var password =auth[1];
+
+  
+  if(username == 'admin'  && password == 'admin'){
+    next();
+  }else{
+    var err = new Error("You are not Authenticated Email or password may be wrong ")
+    res.setHeader('WWW-Authenticate', 'Basic');
+    err.status = 404
+    return next(err);
+  }
+}
+app.use(auth);
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/dish',dishRouter);
